@@ -1,0 +1,286 @@
+package com.lancelotbronner.df.blocks;
+
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.data.BlockFamily;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.grower.TreeGrower;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.neoforge.registries.DeferredBlock;
+
+import static com.lancelotbronner.df.blocks.DFBlocks.register;
+
+public class DFBlockFamilies {
+	public record DFWoodFamily(
+		WoodFamily planks, TreeFamily tree, FurnitureFamily furniture
+	) {
+		public DFWoodFamily(String name) {
+			WoodFamily planks = new WoodFamily(name);
+			TreeFamily tree = new TreeFamily(name);
+			FurnitureFamily furniture = new FurnitureFamily();
+			this(planks, tree, furniture);
+		}
+
+		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+			planks.generate(blockModels, itemModels);
+			tree.generate(blockModels, itemModels);
+		}
+	}
+
+	public record TreeFamily(
+		DeferredBlock<RotatedPillarBlock> log,
+		DeferredBlock<RotatedPillarBlock> wood,
+		DeferredBlock<RotatedPillarBlock> strippedLog,
+		DeferredBlock<RotatedPillarBlock> strippedWood,
+		DeferredBlock<TintedParticleLeavesBlock> leaves,
+		DeferredBlock<SaplingBlock> sapling
+	) {
+		public TreeFamily(String name) {
+			DeferredBlock<RotatedPillarBlock> log = register(
+				String.format("%s_log", name),
+				RotatedPillarBlock::new,
+				p -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG));
+			DeferredBlock<RotatedPillarBlock> wood = register(
+				String.format("%s_wood", name),
+				RotatedPillarBlock::new,
+				p -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD));
+			DeferredBlock<RotatedPillarBlock> strippedLog = register(
+				String.format(
+					"stripped_%s_log",
+					name),
+				RotatedPillarBlock::new,
+				p -> BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_LOG));
+			DeferredBlock<RotatedPillarBlock> strippedWood = register(
+				String.format(
+					"stripped_%s_wood",
+					name),
+				RotatedPillarBlock::new,
+				p -> BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_WOOD));
+			DeferredBlock<TintedParticleLeavesBlock> leaves = register(
+				String.format(
+					"%s_leaves",
+					name),
+				p -> new TintedParticleLeavesBlock(0.01f, p),
+				p -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES));
+			DeferredBlock<SaplingBlock> sapling = register(
+				String.format("%s_sapling", name),
+				p -> new SaplingBlock(TreeGrower.BIRCH, p),
+				p -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
+			this(log, wood, strippedLog, strippedWood, leaves, sapling);
+		}
+
+		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+			blockModels.createRotatableColumn(log.get());
+			blockModels.createRotatableColumn(wood.get());
+			blockModels.createRotatableColumn(strippedLog.get());
+			blockModels.createRotatableColumn(strippedWood.get());
+		}
+	}
+
+	public record WoodFamily(
+		DeferredBlock<Block> planks,
+		DeferredBlock<SlabBlock> slab,
+		DeferredBlock<StairBlock> stairs,
+		DeferredBlock<PressurePlateBlock> pressurePlate,
+		DeferredBlock<ButtonBlock> button,
+		DeferredBlock<FenceBlock> fence,
+		DeferredBlock<FenceGateBlock> fenceGate,
+		DeferredBlock<StandingSignBlock> standingSign,
+		DeferredBlock<CeilingHangingSignBlock> hangingSign,
+		DeferredBlock<WallHangingSignBlock> wallHangingSign
+	) {
+		public WoodFamily(String name) {
+			DeferredBlock<Block> planks = register(String.format("%s_planks", name), Block::new);
+			DeferredBlock<SlabBlock> slab = register(
+				String.format("%s_slab", name),
+				SlabBlock::new);
+			DeferredBlock<StairBlock> stairs = register(
+				String.format("%s_stairs", name), p -> new StairBlock(
+					planks
+						.get()
+						.defaultBlockState(), p));
+			DeferredBlock<PressurePlateBlock> pressurePlate = register(
+				String.format(
+					"%s_pressure_plate",
+					name),
+				p -> new PressurePlateBlock(DFBlockSetType.WOOD, p));
+			DeferredBlock<ButtonBlock> button = register(
+				String.format("%s_button", name),
+				p -> new ButtonBlock(DFBlockSetType.WOOD, 20, p));
+			DeferredBlock<FenceBlock> fence = register(
+				String.format("%s_fence", name),
+				FenceBlock::new);
+			DeferredBlock<FenceGateBlock> fenceGate = register(
+				String.format("%s_fence_gate", name),
+				p -> new FenceGateBlock(DFWoodType.GENERIC, p));
+			DeferredBlock<StandingSignBlock> standingSign = register(
+				String.format("%s_sign", name),
+				p -> new StandingSignBlock(DFWoodType.GENERIC, p));
+			DeferredBlock<CeilingHangingSignBlock> hangingSign = register(
+				String.format(
+					"%s_hanging_sign",
+					name),
+				p -> new CeilingHangingSignBlock(DFWoodType.GENERIC, p));
+			DeferredBlock<WallHangingSignBlock> wallHangingSign = register(
+				String.format(
+					"%s_wall_hanging_sign",
+					name),
+				p -> new WallHangingSignBlock(DFWoodType.GENERIC, p));
+			this(
+				planks,
+				slab,
+				stairs,
+				pressurePlate,
+				button,
+				fence,
+				fenceGate,
+				standingSign,
+				hangingSign,
+				wallHangingSign);
+		}
+
+		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+			blockModels
+				.family(planks.get())
+				.slab(slab.get())
+				.stairs(stairs.get())
+				.pressurePlate(pressurePlate.get())
+				.button(button.get())
+				.fence(fence.get())
+				.fenceGate(fenceGate.get())
+				.sign(standingSign.get());
+			blockModels.createHangingSign(planks.get(), hangingSign.get(), wallHangingSign.get());
+		}
+	}
+
+	public record DFStoneFamily(
+		StoneFamily rough,
+		DeferredBlock<Block> roughEngraved,
+		FurnitureFamily roughFurniture,
+		StoneworkingFamily smooth,
+		DeferredBlock<Block> smoothEngraved,
+		StoneworkingFamily blocks,
+		FurnitureFamily blocksFurniture,
+		StoneFamily cobble,
+		StoneFamily tiles
+	) {
+		public DFStoneFamily(String name) {
+			String nameOfRough = String.format("rough_%s", name);
+			String nameOfSmooth = String.format("smooth_%s", name);
+			String nameOfBlocks = String.format("%s_bricks", name);
+
+			// Rough Stone
+			StoneFamily rough = new StoneFamily(nameOfRough);
+			DeferredBlock<Block> roughEngraved = register(
+				String.format("engraved_%s", nameOfRough),
+				Block::new);
+			FurnitureFamily roughFurniture = new FurnitureFamily();
+			// Smooth Stone
+			StoneworkingFamily smooth = new StoneworkingFamily(String.format("smooth_%s", name));
+			DeferredBlock<Block> smoothEngraved = register(
+				String.format(
+					"engraved_%s",
+					nameOfSmooth), Block::new);
+			// Stone Blocks
+			StoneworkingFamily blocks = new StoneworkingFamily(nameOfBlocks);
+			FurnitureFamily blocksFurniture = new FurnitureFamily();
+			// Cobble Stone
+			StoneFamily cobble = new StoneFamily(String.format("%s_cobble", name));
+			// Stone Tiles
+			StoneFamily tiles = new StoneFamily(String.format("%s_tiles", name));
+
+			this(
+				rough,
+				roughEngraved,
+				roughFurniture,
+				smooth,
+				smoothEngraved,
+				blocks,
+				blocksFurniture,
+				cobble,
+				tiles);
+		}
+
+		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+			rough.generate(blockModels, itemModels);
+			blockModels
+				.familyWithExistingFullBlock(rough.stone.get())
+				.fullBlockVariant(roughEngraved.get());
+			smooth.generate(blockModels, itemModels);
+			blockModels
+				.familyWithExistingFullBlock(rough.stone.get())
+				.fullBlockVariant(smoothEngraved.get());
+			blocks.generate(blockModels, itemModels);
+			cobble.generate(blockModels, itemModels);
+			tiles.generate(blockModels, itemModels);
+		}
+	}
+
+	public record StoneFamily(
+		DeferredBlock<Block> stone,
+		DeferredBlock<SlabBlock> slab,
+		DeferredBlock<WallBlock> wall,
+		DeferredBlock<StairBlock> stairs
+	) {
+		public StoneFamily(String name) {
+			DeferredBlock<Block> block = register(name, Block::new);
+			DeferredBlock<SlabBlock> slab = register(
+				String.format("%s_slab", name),
+				SlabBlock::new);
+			DeferredBlock<WallBlock> wall = register(
+				String.format("%s_wall", name),
+				WallBlock::new);
+			DeferredBlock<StairBlock> stairs = register(
+				String.format("%s_stairs", name), p -> new StairBlock(
+					block
+						.get()
+						.defaultBlockState(), p));
+			this(block, slab, wall, stairs);
+		}
+
+		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+			blockModels
+				.family(stone.get())
+				.slab(slab.get())
+				.wall(wall.get())
+				.stairs(stairs.get());
+		}
+	}
+
+	public record StoneworkingFamily(
+		StoneFamily structural,
+		DeferredBlock<PressurePlateBlock> pressurePlate,
+		DeferredBlock<ButtonBlock> button,
+		DeferredBlock<TrapDoorBlock> hatch,
+		DeferredBlock<DoorBlock> door
+	) {
+		public StoneworkingFamily(String name) {
+			DeferredBlock<PressurePlateBlock> pressurePlate = register(
+				String.format("%s_pressure_plate", name),
+				p -> new PressurePlateBlock(DFBlockSetType.STONE, p));
+			DeferredBlock<ButtonBlock> button = register(
+				String.format("%s_button", name),
+				p -> new ButtonBlock(DFBlockSetType.STONE, 20, p));
+			DeferredBlock<TrapDoorBlock> hatch = register(
+				String.format("%s_trapdoor", name),
+				p -> new TrapDoorBlock(DFBlockSetType.STONE, p));
+			DeferredBlock<DoorBlock> door = register(
+				String.format("%s_door", name),
+				p -> new DoorBlock(DFBlockSetType.STONE, p));
+			this(new StoneFamily(name), pressurePlate, button, hatch, door);
+		}
+
+		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+			blockModels
+				.familyWithExistingFullBlock(structural.stone.get())
+				.pressurePlate(pressurePlate.get())
+				.button(button.get())
+				.door(door.get())
+				.trapdoor(hatch.get());
+		}
+	}
+
+	public record FurnitureFamily(
+		//TODO: all non-Minecraft DF furniture
+	) {}
+}

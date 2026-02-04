@@ -1,6 +1,7 @@
 package com.lancelotbronner.df.datagen;
 
 import com.lancelotbronner.df.DwarfFortress;
+import com.lancelotbronner.df.blocks.DFBlockFamilies;
 import com.lancelotbronner.df.blocks.DFBlocks;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -18,9 +19,9 @@ public class MyModelProvider extends ModelProvider {
 		@NonNull BlockModelGenerators blockModels,
 		@NonNull ItemModelGenerators itemModels
 	) {
-		for (DFBlocks.DFStoneFamily family : DFBlocks.STONES.values())
+		for (DFBlockFamilies.DFStoneFamily family : DFBlocks.STONES.values())
 			family.generate(blockModels, itemModels);
-		for (DFBlocks.DFWoodFamily family : DFBlocks.WOODS.values())
+		for (DFBlockFamilies.DFWoodFamily family : DFBlocks.WOODS.values())
 			family.generate(blockModels, itemModels);
 	}
 }

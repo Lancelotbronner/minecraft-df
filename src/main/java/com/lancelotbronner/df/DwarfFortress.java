@@ -72,7 +72,7 @@ public class DwarfFortress {
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
 		COMPONENTS.register(modEventBus);
-        DFBlocks.touch();
+        DFBlocks.generate();
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (Ages) to respond directly to events.
@@ -99,17 +99,12 @@ public class DwarfFortress {
         Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
     }
 
-    // Add the example block item to the building blocks tab
+    // Add the example stone item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(EXAMPLE_BLOCK_ITEM);
         }
     }
-
-	@SubscribeEvent
-	public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-
-	}
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
