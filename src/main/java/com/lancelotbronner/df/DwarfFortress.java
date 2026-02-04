@@ -1,7 +1,9 @@
 package com.lancelotbronner.df;
 
 import com.lancelotbronner.df.blocks.DFBlocks;
+import com.lancelotbronner.df.datagen.MyModelProvider;
 import net.minecraft.world.item.*;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

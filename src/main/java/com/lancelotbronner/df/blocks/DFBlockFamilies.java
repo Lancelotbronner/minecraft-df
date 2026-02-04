@@ -2,7 +2,7 @@ package com.lancelotbronner.df.blocks;
 
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.data.BlockFamily;
+import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -12,10 +12,10 @@ import static com.lancelotbronner.df.blocks.DFBlocks.register;
 
 public class DFBlockFamilies {
 	public record DFWoodFamily(
-		WoodFamily planks, TreeFamily tree, FurnitureFamily furniture
+		PlanksFamily planks, TreeFamily tree, FurnitureFamily furniture
 	) {
 		public DFWoodFamily(String name) {
-			WoodFamily planks = new WoodFamily(name);
+			PlanksFamily planks = new PlanksFamily(name);
 			TreeFamily tree = new TreeFamily(name);
 			FurnitureFamily furniture = new FurnitureFamily();
 			this(planks, tree, furniture);
@@ -33,7 +33,8 @@ public class DFBlockFamilies {
 		DeferredBlock<RotatedPillarBlock> strippedLog,
 		DeferredBlock<RotatedPillarBlock> strippedWood,
 		DeferredBlock<TintedParticleLeavesBlock> leaves,
-		DeferredBlock<SaplingBlock> sapling
+		DeferredBlock<SaplingBlock> sapling,
+		DeferredBlock<FlowerPotBlock> pottedSapling
 	) {
 		public TreeFamily(String name) {
 			DeferredBlock<RotatedPillarBlock> log = register(
@@ -66,18 +67,23 @@ public class DFBlockFamilies {
 				String.format("%s_sapling", name),
 				p -> new SaplingBlock(TreeGrower.BIRCH, p),
 				p -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
-			this(log, wood, strippedLog, strippedWood, leaves, sapling);
+			DeferredBlock<FlowerPotBlock> pottedSapling = register(
+				String.format("potted_%s_sapling", name),
+				p -> new FlowerPotBlock(sapling.get(), p),
+				p -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING));
+			this(log, wood, strippedLog, strippedWood, leaves, sapling, pottedSapling);
 		}
 
 		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-			blockModels.createRotatableColumn(log.get());
-			blockModels.createRotatableColumn(wood.get());
-			blockModels.createRotatableColumn(strippedLog.get());
-			blockModels.createRotatableColumn(strippedWood.get());
+			blockModels.woodProvider(log.get()).logWithHorizontal(log.get()).wood(wood.get());
+			blockModels.woodProvider(strippedLog.get()).logWithHorizontal(strippedLog.get()).wood(strippedWood.get());
+			blockModels.createPlantWithDefaultItem(sapling.get(), pottedSapling.get(), BlockModelGenerators.PlantType.NOT_TINTED);
+			//TODO: leaves tint color
+			blockModels.createTintedLeaves(leaves.get(), TexturedModel.LEAVES, -12012264);
 		}
 	}
 
-	public record WoodFamily(
+	public record PlanksFamily(
 		DeferredBlock<Block> planks,
 		DeferredBlock<SlabBlock> slab,
 		DeferredBlock<StairBlock> stairs,
@@ -89,7 +95,7 @@ public class DFBlockFamilies {
 		DeferredBlock<CeilingHangingSignBlock> hangingSign,
 		DeferredBlock<WallHangingSignBlock> wallHangingSign
 	) {
-		public WoodFamily(String name) {
+		public PlanksFamily(String name) {
 			DeferredBlock<Block> planks = register(String.format("%s_planks", name), Block::new);
 			DeferredBlock<SlabBlock> slab = register(
 				String.format("%s_slab", name),
@@ -150,6 +156,7 @@ public class DFBlockFamilies {
 				.fenceGate(fenceGate.get())
 				.sign(standingSign.get());
 			blockModels.createHangingSign(planks.get(), hangingSign.get(), wallHangingSign.get());
+			//TODO: this.createShelf(Blocks.ACACIA_SHELF, Blocks.STRIPPED_ACACIA_LOG);
 		}
 	}
 
