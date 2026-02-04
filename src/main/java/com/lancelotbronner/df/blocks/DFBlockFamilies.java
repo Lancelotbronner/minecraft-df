@@ -1,8 +1,9 @@
 package com.lancelotbronner.df.blocks;
 
+import com.lancelotbronner.df.datagen.MyModelProvider;
 import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -11,6 +12,9 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import static com.lancelotbronner.df.blocks.DFBlocks.register;
 
 public class DFBlockFamilies {
+	public final static String RECIPE_GROUP_PREFIX_WOODEN = "wooden";
+	public final static String RECIPE_UNLOCKED_BY_HAS_PLANKS = "has_planks";
+
 	public record DFWoodFamily(
 		PlanksFamily planks, TreeFamily tree, FurnitureFamily furniture
 	) {
@@ -21,9 +25,9 @@ public class DFBlockFamilies {
 			this(planks, tree, furniture);
 		}
 
-		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-			planks.generate(blockModels, itemModels);
-			tree.generate(blockModels, itemModels);
+		public void generate(MyModelProvider.ModelGenerators generators) {
+			planks.generate(generators);
+			tree.generate(generators);
 		}
 	}
 
@@ -74,12 +78,27 @@ public class DFBlockFamilies {
 			this(log, wood, strippedLog, strippedWood, leaves, sapling, pottedSapling);
 		}
 
-		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-			blockModels.woodProvider(log.get()).logWithHorizontal(log.get()).wood(wood.get());
-			blockModels.woodProvider(strippedLog.get()).logWithHorizontal(strippedLog.get()).wood(strippedWood.get());
-			blockModels.createPlantWithDefaultItem(sapling.get(), pottedSapling.get(), BlockModelGenerators.PlantType.NOT_TINTED);
+		public void generate(MyModelProvider.ModelGenerators generators) {
+			generators
+				.blockModels()
+				.woodProvider(log.get())
+				.logWithHorizontal(log.get())
+				.wood(wood.get());
+			generators
+				.blockModels()
+				.woodProvider(strippedLog.get())
+				.logWithHorizontal(strippedLog.get())
+				.wood(strippedWood.get());
+			generators
+				.blockModels()
+				.createPlantWithDefaultItem(
+					sapling.get(),
+					pottedSapling.get(),
+					BlockModelGenerators.PlantType.NOT_TINTED);
 			//TODO: leaves tint color
-			blockModels.createTintedLeaves(leaves.get(), TexturedModel.LEAVES, -12012264);
+			generators
+				.blockModels()
+				.createTintedLeaves(leaves.get(), TexturedModel.LEAVES, -12012264);
 		}
 	}
 
@@ -92,6 +111,7 @@ public class DFBlockFamilies {
 		DeferredBlock<FenceBlock> fence,
 		DeferredBlock<FenceGateBlock> fenceGate,
 		DeferredBlock<StandingSignBlock> standingSign,
+		DeferredBlock<WallSignBlock> wallSign,
 		DeferredBlock<CeilingHangingSignBlock> hangingSign,
 		DeferredBlock<WallHangingSignBlock> wallHangingSign
 	) {
@@ -122,6 +142,9 @@ public class DFBlockFamilies {
 			DeferredBlock<StandingSignBlock> standingSign = register(
 				String.format("%s_sign", name),
 				p -> new StandingSignBlock(DFWoodType.GENERIC, p));
+			DeferredBlock<WallSignBlock> wallSign = register(
+				String.format("%s_wall_sign", name),
+				p -> new WallSignBlock(DFWoodType.GENERIC, p));
 			DeferredBlock<CeilingHangingSignBlock> hangingSign = register(
 				String.format(
 					"%s_hanging_sign",
@@ -141,21 +164,36 @@ public class DFBlockFamilies {
 				fence,
 				fenceGate,
 				standingSign,
+				wallSign,
 				hangingSign,
 				wallHangingSign);
 		}
 
-		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-			blockModels
-				.family(planks.get())
-				.slab(slab.get())
-				.stairs(stairs.get())
-				.pressurePlate(pressurePlate.get())
-				.button(button.get())
-				.fence(fence.get())
-				.fenceGate(fenceGate.get())
-				.sign(standingSign.get());
-			blockModels.createHangingSign(planks.get(), hangingSign.get(), wallHangingSign.get());
+		public void generate(MyModelProvider.ModelGenerators generators) {
+			var family = new BlockFamily.Builder(planks.get())
+				.recipeGroupPrefix(RECIPE_GROUP_PREFIX_WOODEN)
+				.recipeUnlockedBy(RECIPE_UNLOCKED_BY_HAS_PLANKS);
+			if (generators.shouldGenerate(slab))
+				family.slab(slab.get());
+			if (generators.shouldGenerate(stairs))
+				family.stairs(stairs.get());
+			if (generators.shouldGenerate(pressurePlate))
+				family.pressurePlate(pressurePlate.get());
+			if (generators.shouldGenerate(button))
+				family.button(button.get());
+			if (generators.shouldGenerate(fence))
+				family.fence(fence.get());
+			if (generators.shouldGenerate(fenceGate))
+				family.fenceGate(fenceGate.get());
+			if (generators.shouldGenerate(standingSign) && generators.shouldGenerate(wallSign))
+				family.sign(standingSign.get(), wallSign.get());
+			generators
+				.familyProviderFor(planks)
+				.generateFor(family.getFamily());
+			if (generators.shouldGenerate(hangingSign) && generators.shouldGenerate(wallHangingSign))
+				generators
+					.blockModels()
+					.createHangingSign(planks.get(), hangingSign.get(), wallHangingSign.get());
 			//TODO: this.createShelf(Blocks.ACACIA_SHELF, Blocks.STRIPPED_ACACIA_LOG);
 		}
 	}
@@ -195,7 +233,6 @@ public class DFBlockFamilies {
 			StoneFamily cobble = new StoneFamily(String.format("%s_cobble", name));
 			// Stone Tiles
 			StoneFamily tiles = new StoneFamily(String.format("%s_tiles", name));
-
 			this(
 				rough,
 				roughEngraved,
@@ -208,18 +245,20 @@ public class DFBlockFamilies {
 				tiles);
 		}
 
-		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-			rough.generate(blockModels, itemModels);
-			blockModels
+		public void generate(MyModelProvider.ModelGenerators generators) {
+			rough.generate(generators);
+			generators
+				.blockModels()
 				.familyWithExistingFullBlock(rough.stone.get())
 				.fullBlockVariant(roughEngraved.get());
-			smooth.generate(blockModels, itemModels);
-			blockModels
+			smooth.generate(generators);
+			generators
+				.blockModels()
 				.familyWithExistingFullBlock(rough.stone.get())
 				.fullBlockVariant(smoothEngraved.get());
-			blocks.generate(blockModels, itemModels);
-			cobble.generate(blockModels, itemModels);
-			tiles.generate(blockModels, itemModels);
+			blocks.generate(generators);
+			cobble.generate(generators);
+			tiles.generate(generators);
 		}
 	}
 
@@ -245,8 +284,9 @@ public class DFBlockFamilies {
 			this(block, slab, wall, stairs);
 		}
 
-		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-			blockModels
+		public void generate(MyModelProvider.ModelGenerators generators) {
+			generators
+				.blockModels()
 				.family(stone.get())
 				.slab(slab.get())
 				.wall(wall.get())
@@ -277,8 +317,10 @@ public class DFBlockFamilies {
 			this(new StoneFamily(name), pressurePlate, button, hatch, door);
 		}
 
-		public void generate(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-			blockModels
+		public void generate(MyModelProvider.ModelGenerators generators) {
+			structural.generate(generators);
+			generators
+				.blockModels()
 				.familyWithExistingFullBlock(structural.stone.get())
 				.pressurePlate(pressurePlate.get())
 				.button(button.get())

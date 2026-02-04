@@ -34,7 +34,9 @@ public class DFBlocks {
 		Identifier minecraftId = Identifier.fromNamespaceAndPath("minecraft", name);
 		if (BuiltInRegistries.BLOCK.containsKey(minecraftId))
 			return DeferredBlock.createBlock(minecraftId);
-		return DwarfFortress.BLOCKS.registerBlock(name, factory, modify);
+		DeferredBlock<B> block = DwarfFortress.BLOCKS.registerBlock(name, factory, modify);
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
 	}
 
 	public static <B extends Block> DeferredBlock<B> register(
