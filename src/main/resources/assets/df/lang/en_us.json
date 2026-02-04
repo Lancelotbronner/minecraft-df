@@ -1,0 +1,13 @@
+{
+  "itemGroup.ages": "Example Mod Tab",
+  "block.ages.example_block": "Example Block",
+  "item.ages.example_item": "Example Item",
+
+  "ages.configuration.title": "Ages Configs",
+  "ages.configuration.section.ages.common.toml": "Ages Configs",
+  "ages.configuration.section.ages.common.toml.title": "Ages Configs",
+  "ages.configuration.items": "Item List",
+  "ages.configuration.logDirtBlock": "Log Dirt Block",
+  "ages.configuration.magicNumberIntroduction": "Magic Number Text",
+  "ages.configuration.magicNumber": "Magic Number"
+}
