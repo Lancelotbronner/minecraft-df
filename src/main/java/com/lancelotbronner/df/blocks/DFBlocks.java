@@ -2,7 +2,7 @@ package com.lancelotbronner.df.blocks;
 
 import com.lancelotbronner.df.DwarfFortress;
 import com.lancelotbronner.df.data.Stone;
-import com.lancelotbronner.df.data.Wood;
+import com.lancelotbronner.df.data.Tree;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -15,13 +15,13 @@ import java.util.function.UnaryOperator;
 
 public class DFBlocks {
 	public static final EnumMap<Stone, DFBlockFamilies.DFStoneFamily> STONES = new EnumMap<>(Stone.class);
-	public static final EnumMap<Wood, DFBlockFamilies.DFWoodFamily> WOODS = new EnumMap<>(Wood.class);
+	public static final EnumMap<Tree, DFBlockFamilies.DFWoodFamily> WOODS = new EnumMap<>(Tree.class);
 
 	static {
 		for (Stone stone : Stone.values())
 			STONES.put(stone, new DFBlockFamilies.DFStoneFamily(stone.name));
-		for (Wood wood : Wood.values())
-			WOODS.put(wood, new DFBlockFamilies.DFWoodFamily(wood.name));
+		for (Tree tree : Tree.values())
+			WOODS.put(tree, new DFBlockFamilies.DFWoodFamily(tree.name));
 	}
 
 	public static void generate() {}
@@ -45,4 +45,6 @@ public class DFBlocks {
 	) {
 		return register(name, factory, UnaryOperator.identity());
 	}
+
+
 }

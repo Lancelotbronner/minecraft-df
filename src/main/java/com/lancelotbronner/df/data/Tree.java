@@ -1,6 +1,6 @@
 package com.lancelotbronner.df.data;
 
-public enum Wood {
+public enum Tree {
 	ACACIA("acacia", Color.PEACH),
 	ALDER("alder", Color.TAN),
 	ALMOND("almond", Color.COPPER),
@@ -77,7 +77,7 @@ public enum Wood {
 	public final String name;
 	public final Color color;
 
-	Wood(String name, Color color) {
+	Tree(String name, Color color) {
 		this.name = name;
 		this.color = color;
 	}
