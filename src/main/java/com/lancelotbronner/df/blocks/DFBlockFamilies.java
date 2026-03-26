@@ -247,15 +247,17 @@ public class DFBlockFamilies {
 
 		public void generate(MyModelProvider.ModelGenerators generators) {
 			rough.generate(generators);
-			generators
-				.blockModels()
-				.familyWithExistingFullBlock(rough.stone.get())
-				.fullBlockVariant(roughEngraved.get());
+			if (generators.shouldGenerate(roughEngraved))
+				generators
+					.blockModels()
+					.familyWithExistingFullBlock(rough.stone.get())
+					.fullBlockVariant(roughEngraved.get());
 			smooth.generate(generators);
-			generators
-				.blockModels()
-				.familyWithExistingFullBlock(rough.stone.get())
-				.fullBlockVariant(smoothEngraved.get());
+			if (generators.shouldGenerate(smoothEngraved))
+				generators
+					.blockModels()
+					.familyWithExistingFullBlock(rough.stone.get())
+					.fullBlockVariant(smoothEngraved.get());
 			blocks.generate(generators);
 			cobble.generate(generators);
 			tiles.generate(generators);
@@ -285,12 +287,16 @@ public class DFBlockFamilies {
 		}
 
 		public void generate(MyModelProvider.ModelGenerators generators) {
+			var family = new BlockFamily.Builder(stone.get());
+			if (generators.shouldGenerate(slab))
+				family.slab(slab.get());
+			if (generators.shouldGenerate(wall))
+				family.wall(wall.get());
+			if (generators.shouldGenerate(stairs))
+				family.stairs(stairs.get());
 			generators
-				.blockModels()
-				.family(stone.get())
-				.slab(slab.get())
-				.wall(wall.get())
-				.stairs(stairs.get());
+				.familyProviderFor(stone)
+				.generateFor(family.getFamily());
 		}
 	}
 
@@ -319,13 +325,20 @@ public class DFBlockFamilies {
 
 		public void generate(MyModelProvider.ModelGenerators generators) {
 			structural.generate(generators);
+			var family = new BlockFamily.Builder(structural.stone.get())
+				.recipeGroupPrefix(RECIPE_GROUP_PREFIX_WOODEN)
+				.recipeUnlockedBy(RECIPE_UNLOCKED_BY_HAS_PLANKS);
+			if (generators.shouldGenerate(pressurePlate))
+				family.pressurePlate(pressurePlate.get());
+			if (generators.shouldGenerate(button))
+				family.button(button.get());
+			if (generators.shouldGenerate(door))
+				family.door(door.get());
+			if (generators.shouldGenerate(hatch))
+				family.trapdoor(hatch.get());
 			generators
-				.blockModels()
-				.familyWithExistingFullBlock(structural.stone.get())
-				.pressurePlate(pressurePlate.get())
-				.button(button.get())
-				.door(door.get())
-				.trapdoor(hatch.get());
+				.familyProviderFor(structural.stone)
+				.generateFor(family.getFamily());
 		}
 	}
 

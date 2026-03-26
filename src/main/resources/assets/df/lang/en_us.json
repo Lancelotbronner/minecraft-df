@@ -9,5 +9,7 @@
   "ages.configuration.items": "Item List",
   "ages.configuration.logDirtBlock": "Log Dirt Block",
   "ages.configuration.magicNumberIntroduction": "Magic Number Text",
-  "ages.configuration.magicNumber": "Magic Number"
+  "ages.configuration.magicNumber": "Magic Number",
+
+  "item.df.opal_black.cabochon_rectangular": "Black Opal"
 }

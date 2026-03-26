@@ -50,7 +50,7 @@ public enum Stone {
 	JET("jet", Color.BLUE_MIDNIGHT, true, false),
 	KAOLINITE("kaolinite", Color.PEARL, true, true),
 	CERULEAN("kimberlite", Color.CERULEAN, true, false),
-	LIGNITE("lignite", Color.SLATE_GRAY, false, false),
+	LIGNITE("lignite", Color.GRAY_SLATE, false, false),
 	MARCASITE("marcasite", Color.GREEN_YELLOW, false, false),
 	MICA("mica", Color.SAFFRON, true, true),
 	MICROCLINE("microcline", Color.AQUA, true, false),
@@ -75,13 +75,21 @@ public enum Stone {
 
 	public final String name;
 	public final Color color;
+	public final TextureSet.Block texture;
+	public final TextureSet.Door door;
 	public final boolean isFireSafe;
 	public final boolean isMagmaSafe;
 
-	Stone(String name, Color color, boolean isFireSafe, boolean isMagmaSafe) {
+	Stone(String name, Color color, TextureSet.Block texture, TextureSet.Door door, boolean isFireSafe, boolean isMagmaSafe) {
 		this.name = name;
 		this.color = color;
+		this.texture = texture;
+		this.door = door;
 		this.isFireSafe = isFireSafe;
 		this.isMagmaSafe = isMagmaSafe;
+	}
+
+	Stone(String name, Color color, boolean isFireSafe, boolean isMagmaSafe) {
+		this(name, color, TextureSet.Block.BLOCKS, TextureSet.Door.MANGROVE_DOOR, isFireSafe, isMagmaSafe);
 	}
 }

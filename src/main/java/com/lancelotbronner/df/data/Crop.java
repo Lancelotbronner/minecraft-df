@@ -1,0 +1,76 @@
+package com.lancelotbronner.df.data;
+
+public enum Crop {
+	// Subterranean
+	PLUMP_HELMET("plump_helmet"),
+	PIG_TAIL("pig_tail"),
+	CAVE_WHEAT("cave_wheat"),
+	SWEET_POD("sweet_pod"),
+	QUARRY_BUSH("quarry_bush"),
+	DIMPLE_CUP("dimple_cup"),
+	// Ground
+	MUCK_ROOTS("muck_roots"),
+	BLOATED_TUBER("bloated_tuber"),
+	KOBOLD_BULB("kobold_bulb"),
+	PRICKLE_BERRY("prickle_berry"),
+	STRAWBERRY("strawberry"),
+	LONGLAND_GRASS("longland_grass"),
+	VALLEY_HERB("valley_herb"),
+	RAT_WEED("rat_weed"),
+	FISHER_BERRY("fisher_berry"),
+	ROPE_REED("rope_reed"),
+	BLADE_WEED("blade_weed"),
+	HIDE_ROOT("hide_root"),
+	SILVER_BARB("silver_barb"),
+	SUN_BERRY("sun_berry"),
+	WHIP_VINE("whip_vine"),
+	// Garden
+	ARTICHOKE("artichoke"),
+	ASPARAGUS("asparagus"),
+	BAMBARA_GROUNDNUT("bambara_groundnut"),
+	STRING_BEAN("string_bean"),
+	BROAD_BEAN("broad_bean"),
+	BEET("beet"),
+	BITTER_MELON("bitter_melon"),
+	CABBAGE("cabbage"),
+	CAPER("caper"),
+	WILD_CARROT("wild_carrot"),
+	CASSAVA("cassava"),
+	CELERY("celery"),
+	CHICKPEA("chickpea"),
+	CHICORY("chicory"),
+	COWPEA("cowpea"),
+	CUCUMBER("cucumber"),
+	EGGPLANT("eggplant"),
+	GARDEN_CRESS("garden_cress"),
+	GARLIC("garlic"),
+	HORNED_MELON("horned_melon"),
+	LEEK("leek"),
+	LENTIL("lentil"),
+	LETTUCE("lettuce"),
+	MUNG_BEAN("mung_bean"),
+	MUSKMELON("muskmelon"),
+	ONION("onion"),
+	PARSNIP("parsnip"),
+	PEA("pea"),
+	PEANUT("peanut"),
+	PEPPER("pepper"),
+	POTATO("potato"),
+	RADISH("radish"),
+	RED_BEAN("red_bean"),
+	RHUBARB("rhubarb"),
+	SOYBEAN("soybean"),
+	SPINACH("spinach"),
+	SQUASH("squash"),
+	SWEET_POTATO("sweet_potato"),
+	TARO("taro"),
+	TOMATO("tomato"),
+	TOMATILLO("tomatillo"),
+	;
+
+	public final String name;
+
+	Crop(String name) {
+		this.name = name;
+	}
+}

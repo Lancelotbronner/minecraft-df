@@ -1,6 +1,7 @@
 package com.lancelotbronner.df.blocks;
 
 import com.lancelotbronner.df.DwarfFortress;
+import com.lancelotbronner.df.data.Stone;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -11,6 +12,27 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 public class DFBlockUtils {
 	public static DeferredBlock<Block> block(String name) {
 		return DwarfFortress.BLOCKS.registerBlock(name, Block::new);
+	}
+
+	public static DeferredBlock<Block> rough(Stone stone) {
+		String name = String.format("rough_%s", stone.name);
+		DeferredBlock<Block> block = DwarfFortress.BLOCKS.registerBlock(name, Block::new);
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<Block> smooth(Stone stone) {
+		String name = String.format("smooth_%s", stone.name);
+		DeferredBlock<Block> block = DwarfFortress.BLOCKS.registerBlock(name, Block::new);
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<Block> engraved(Stone stone) {
+		String name = String.format("engraved_%s", stone.name);
+		DeferredBlock<Block> block = DwarfFortress.BLOCKS.registerBlock(name, Block::new);
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
 	}
 
 	public static DeferredBlock<Block> planks(String name) {
@@ -69,10 +91,7 @@ public class DFBlockUtils {
 			() -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
 	}
 
-	public static DeferredBlock<FlowerPotBlock> pottedPlant(
-		String name,
-		DeferredBlock<? extends Block> plant
-	) {
+	public static DeferredBlock<FlowerPotBlock> pottedPlant(String name, DeferredBlock<? extends Block> plant) {
 		name = String.format("potted_%s", name);
 		return DwarfFortress.BLOCKS.registerBlock(
 			name,
@@ -81,23 +100,74 @@ public class DFBlockUtils {
 
 	public static DeferredBlock<SlabBlock> slab(String name, Block template) {
 		name = String.format("%s_slab", name);
-		return DwarfFortress.BLOCKS.registerBlock(
-			name,
-			SlabBlock::new,
-			() -> BlockBehaviour.Properties.ofFullCopy(template));
+		return DwarfFortress.BLOCKS.registerBlock(name, SlabBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(template));
 	}
 
-	public static DeferredBlock<StairBlock> stairs(String name, Block base) {
+	public static DeferredBlock<SlabBlock> smoothSlab(Stone stone) {
+		String name = String.format("smooth_%s_slab", stone.name);
+		DeferredBlock<SlabBlock> block = DwarfFortress.BLOCKS.registerBlock(
+			name,
+			SlabBlock::new,
+			() -> BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE_SLAB));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<SlabBlock> roughSlab(Stone stone) {
+		String name = String.format("rough_%s_slab", stone.name);
+		DeferredBlock<SlabBlock> block = DwarfFortress.BLOCKS.registerBlock(
+			name,
+			SlabBlock::new,
+			() -> BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE_SLAB));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<StairBlock> stairs(String name, DeferredBlock<Block> base) {
 		name = String.format("%s_stairs", name);
 		return DwarfFortress.BLOCKS.registerBlock(
 			name,
-			p -> new StairBlock(base.defaultBlockState(), p),
-			() -> BlockBehaviour.Properties.ofFullCopy(base));
+			p -> new StairBlock(base.get().defaultBlockState(), p),
+			() -> BlockBehaviour.Properties.ofFullCopy(base.get()));
+	}
+
+	public static DeferredBlock<StairBlock> roughStairs(Stone stone, DeferredBlock<Block> base) {
+		String name = String.format("rough_%s_stairs", stone.name);
+		DeferredBlock<StairBlock> block = DwarfFortress.BLOCKS.registerBlock(
+			name,
+			p -> new StairBlock(base.get().defaultBlockState(), p),
+			() -> BlockBehaviour.Properties.ofFullCopy(base.get()));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<StairBlock> smoothStairs(Stone stone, DeferredBlock<Block> base) {
+		String name = String.format("smooth_%s_stairs", stone.name);
+		DeferredBlock<StairBlock> block = DwarfFortress.BLOCKS.registerBlock(
+			name,
+			p -> new StairBlock(base.get().defaultBlockState(), p),
+			() -> BlockBehaviour.Properties.ofFullCopy(base.get()));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
 	}
 
 	public static DeferredBlock<WallBlock> wall(String name) {
 		name = String.format("%s_wall", name);
 		return DwarfFortress.BLOCKS.registerBlock(name, WallBlock::new);
+	}
+
+	public static DeferredBlock<WallBlock> roughWall(Stone stone) {
+		String name = String.format("rough_%s_wall", stone.name);
+		DeferredBlock<WallBlock> block = DwarfFortress.BLOCKS.registerBlock(name, WallBlock::new);
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<WallBlock> smoothWall(Stone stone) {
+		String name = String.format("smooth_%s_wall", stone.name);
+		DeferredBlock<WallBlock> block = DwarfFortress.BLOCKS.registerBlock(name, WallBlock::new);
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
 	}
 
 	public static DeferredBlock<FenceBlock> fence(String name) {
@@ -110,25 +180,68 @@ public class DFBlockUtils {
 		return DwarfFortress.BLOCKS.registerBlock(name, p -> new FenceGateBlock(woodType, p));
 	}
 
-	public static DeferredBlock<PressurePlateBlock> pressurePlate(
-		String name,
-		BlockSetType blockSetType
-	) {
+	public static DeferredBlock<PressurePlateBlock> pressurePlate(String name, BlockSetType blockSetType) {
 		name = String.format("%s_pressure_plate", name);
-		return DwarfFortress.BLOCKS.registerBlock(
+		return DwarfFortress.BLOCKS.registerBlock(name, p -> new PressurePlateBlock(blockSetType, p));
+	}
+
+	public static DeferredBlock<PressurePlateBlock> pressurePlate(
+		Stone stone
+	) {
+		String name = String.format("%s_pressure_plate", stone.name);
+		DeferredBlock<PressurePlateBlock> block = DwarfFortress.BLOCKS.registerBlock(
 			name,
-			p -> new PressurePlateBlock(blockSetType, p));
+			p -> new PressurePlateBlock(DFBlockSetType.STONE, p));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<ButtonBlock> button(String name, BlockSetType blockSetType, int ticksToStayPressed) {
+		name = String.format("%s_button", name);
+		return DwarfFortress.BLOCKS.registerBlock(name, p -> new ButtonBlock(blockSetType, ticksToStayPressed, p));
 	}
 
 	public static DeferredBlock<ButtonBlock> button(
-		String name,
-		BlockSetType blockSetType,
-		int ticksToStayPressed
+		Stone stone
 	) {
-		name = String.format("%s_button", name);
-		return DwarfFortress.BLOCKS.registerBlock(
+		String name = String.format("%s_button", stone.name);
+		DeferredBlock<ButtonBlock> block = DwarfFortress.BLOCKS.registerBlock(
 			name,
-			p -> new ButtonBlock(blockSetType, ticksToStayPressed, p));
+			p -> new ButtonBlock(DFBlockSetType.STONE, 20, p));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<TrapDoorBlock> trapdoor(String name, BlockSetType blockSetType) {
+		name = String.format("%s_trapdoor", name);
+		DeferredBlock<TrapDoorBlock> block = DwarfFortress.BLOCKS.registerBlock(name, p -> new TrapDoorBlock(blockSetType, p));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<TrapDoorBlock> trapdoor(
+		Stone stone
+	) {
+		String name = String.format("%s_trapdoor", stone.name);
+		DeferredBlock<TrapDoorBlock> block = DwarfFortress.BLOCKS.registerBlock(
+			name,
+			p -> new TrapDoorBlock(DFBlockSetType.STONE, p));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
+	}
+
+	public static DeferredBlock<DoorBlock> door(String name, BlockSetType blockSetType) {
+		name = String.format("%s_door", name);
+		return DwarfFortress.BLOCKS.registerBlock(name, p -> new DoorBlock(blockSetType, p));
+	}
+
+	public static DeferredBlock<DoorBlock> door(
+		Stone stone
+	) {
+		String name = String.format("%s_door", stone.name);
+		DeferredBlock<DoorBlock> block = DwarfFortress.BLOCKS.registerBlock(name, p -> new DoorBlock(DFBlockSetType.STONE, p));
+		DwarfFortress.ITEMS.registerSimpleBlockItem(name, block);
+		return block;
 	}
 
 	public static DeferredBlock<StandingSignBlock> standingSign(String name, WoodType woodType) {
@@ -141,20 +254,12 @@ public class DFBlockUtils {
 		return DwarfFortress.BLOCKS.registerBlock(name, p -> new WallSignBlock(woodType, p));
 	}
 
-	public static DeferredBlock<CeilingHangingSignBlock> ceilingHangingSign(
-		String name,
-		WoodType woodType
-	) {
+	public static DeferredBlock<CeilingHangingSignBlock> ceilingHangingSign(String name, WoodType woodType) {
 		name = String.format("%s_hanging_sign", name);
-		return DwarfFortress.BLOCKS.registerBlock(
-			name,
-			p -> new CeilingHangingSignBlock(woodType, p));
+		return DwarfFortress.BLOCKS.registerBlock(name, p -> new CeilingHangingSignBlock(woodType, p));
 	}
 
-	public static DeferredBlock<WallHangingSignBlock> wallHangingSign(
-		String name,
-		WoodType woodType
-	) {
+	public static DeferredBlock<WallHangingSignBlock> wallHangingSign(String name, WoodType woodType) {
 		name = String.format("%s_wall_hanging_sign", name);
 		return DwarfFortress.BLOCKS.registerBlock(name, p -> new WallHangingSignBlock(woodType, p));
 	}
