@@ -57,6 +57,11 @@ public class MyModelProvider extends ModelProvider {
 				DFModelUtils.cuboid(TextureSet.BLOCK, stone.color));
 		}
 
+		// Generate trees
+		for (Tree tree : Tree.values()) {
+
+		}
+
 		// Generate metals
 		for (Metal metal : Metal.values()) {
 			// Generate bars, chains, anvil, mechanisms

@@ -79,8 +79,4 @@ public class DFItemUtils {
 	public static DeferredItem<Item> spawn_egg(Vermin vermin) {
 		return DwarfFortress.ITEMS.registerItem(vermin.name + "/spawn_egg", Item::new);
 	}
-
-	public static <K, V> Map<K, V> map(K[] values, Function<K, V> value) {
-		return Stream.of(values).collect(Collectors.toMap(k -> k, value));
-	}
 }

@@ -4,6 +4,7 @@ import com.lancelotbronner.df.data.Gem;
 import com.lancelotbronner.df.data.GemCut;
 import com.lancelotbronner.df.data.Metal;
 import com.lancelotbronner.df.data.Stone;
+import com.lancelotbronner.df.utils.DFUtils;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 
@@ -29,28 +30,30 @@ public class DFItems {
 	// cauldron, ladle, bowl, mortar, pestle, nest box, jug, large pot, hive, honeycomb, pouch, minecart, wheelbarrow, step ladder, scroll rollers, book binding, scroll, quire, die/dice
 
 	// Stones
-	public static final Map<Stone, DeferredItem<Item>> STONE_BLOCKS = DFItemUtils.map(Stone.values(), DFItemUtils::block);
+	public static final Map<Stone, DeferredItem<Item>> STONE_BLOCKS = DFUtils.map(
+		Stone.values(),
+		DFItemUtils::block);
 	// chunk/brick?
 
 	// Gems
 	public static final Map<Gem, DeferredItem<Item>> ROUGH_GEMS = Stream
 		.of(Gem.values())
 		.collect(Collectors.toMap(k -> k, DFItemUtils::boulder));
-	public static final Map<Gem, Map<GemCut, DeferredItem<Item>>> CUT_GEMS = DFItemUtils.map(
+	public static final Map<Gem, Map<GemCut, DeferredItem<Item>>> CUT_GEMS = DFUtils.map(
 		Gem.values(),
-		gem -> DFItemUtils.map(GemCut.values(), cut -> DFItemUtils.cutGem(gem, cut)));
+		gem -> DFUtils.map(GemCut.values(), cut -> DFItemUtils.cutGem(gem, cut)));
 
 	// Metals
-	public static final Map<Metal, DeferredItem<Item>> BARS = DFItemUtils.map(
+	public static final Map<Metal, DeferredItem<Item>> BARS = DFUtils.map(
 		Metal.values(),
 		DFItemUtils::bar);
-	public static final Map<Metal, DeferredItem<Item>> CHAINS = DFItemUtils.map(
+	public static final Map<Metal, DeferredItem<Item>> CHAINS = DFUtils.map(
 		Metal.values(),
 		DFItemUtils::chains);
-	public static final Map<Metal, DeferredItem<Item>> ANVILS = DFItemUtils.map(
+	public static final Map<Metal, DeferredItem<Item>> ANVILS = DFUtils.map(
 		Metal.values(),
 		DFItemUtils::anvil);
-	public static final Map<Metal, DeferredItem<Item>> METAL_MECHANISMS = DFItemUtils.map(
+	public static final Map<Metal, DeferredItem<Item>> METAL_MECHANISMS = DFUtils.map(
 		Metal.values(),
 		DFItemUtils::mechanism);
 

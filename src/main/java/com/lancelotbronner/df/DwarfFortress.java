@@ -2,12 +2,10 @@ package com.lancelotbronner.df;
 
 import com.lancelotbronner.df.blocks.DFBlocks;
 import com.lancelotbronner.df.components.DFComponents;
-import com.lancelotbronner.df.data.Gem;
-import com.lancelotbronner.df.data.GemCut;
-import com.lancelotbronner.df.data.Metal;
-import com.lancelotbronner.df.data.Stone;
+import com.lancelotbronner.df.data.*;
 import com.lancelotbronner.df.entities.DFEntityTypes;
 import com.lancelotbronner.df.items.DFItems;
+import com.lancelotbronner.df.materials.DFMaterials;
 import com.lancelotbronner.df.registries.DFRegistries;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,7 +43,10 @@ public class DwarfFortress {
 	public static final DeferredRegister.Entities ENTITY_TYPES = DeferredRegister.createEntities(
 		MODID);
 	public static final DeferredRegister<GemCut> GEM_CUTS = DeferredRegister.create(
-		DFRegistries.GEM_CUTS,
+		DFRegistries.GEM_CUT,
+		MODID);
+	public static final DeferredRegister<Material> MATERIALS = DeferredRegister.create(
+		DFRegistries.MATERIAL,
 		MODID);
 	public static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE,
 		MODID);
@@ -61,6 +62,7 @@ public class DwarfFortress {
 		ITEMS.register(bus);
 		ENTITY_TYPES.register(bus);
 		GEM_CUTS.register(bus);
+		MATERIALS.register(bus);
 		COMPONENTS.register(bus);
 		CREATIVE_MODE_TABS.register(bus);
 
@@ -74,6 +76,7 @@ public class DwarfFortress {
 
 		// Activate the static initializer of our container classes
 		DFComponents.register();
+		DFMaterials.register();
 		DFBlocks.generate();
 		DFItems.register();
 		DFEntityTypes.register();
@@ -127,6 +130,7 @@ public class DwarfFortress {
 
 	@SubscribeEvent
 	public static void registerRegistries(NewRegistryEvent event) {
-		event.register(DFRegistries.GEM_CUTS);
+		event.register(DFRegistries.GEM_CUT);
+		event.register(DFRegistries.MATERIAL);
 	}
 }
