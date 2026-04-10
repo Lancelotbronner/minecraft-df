@@ -19,6 +19,13 @@ import static com.lancelotbronner.df.data.Stone.*;
 public class DFBlocks {
 	public static final EnumMap<Tree, DFBlockFamilies.DFWoodFamily> WOODS = new EnumMap<>(Tree.class);
 
+	/*
+	Minecraft is now adding per-stone:
+	- Each of them has the Stone, Polished and the Bricks variants
+	- Each variant has its Slabs, Stairs and Walls blocks
+	- Each of them has a chiseled block
+	 */
+
 	// chalk
 	public static final DeferredBlock<Block> CHALK_ENGRAVED = DFBlockUtils.engraved(CHALK);
 	public static final DeferredBlock<Block> CHALK_ROUGH = DFBlockUtils.rough(CHALK);

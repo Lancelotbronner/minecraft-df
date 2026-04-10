@@ -2,10 +2,14 @@ package com.lancelotbronner.df;
 
 import com.lancelotbronner.df.blocks.DFBlocks;
 import com.lancelotbronner.df.components.DFComponents;
-import com.lancelotbronner.df.data.*;
+import com.lancelotbronner.df.data.Gem;
+import com.lancelotbronner.df.data.GemCut;
+import com.lancelotbronner.df.data.Metal;
+import com.lancelotbronner.df.data.Stone;
 import com.lancelotbronner.df.entities.DFEntityTypes;
 import com.lancelotbronner.df.items.DFItems;
 import com.lancelotbronner.df.materials.DFMaterials;
+import com.lancelotbronner.df.materials.Material;
 import com.lancelotbronner.df.registries.DFRegistries;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -95,12 +99,12 @@ public class DwarfFortress {
 		Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
 	}
 
-	public static Identifier id(String path) {
-		return Identifier.fromNamespaceAndPath(MODID, path);
-	}
-
 	public static Identifier id(String first, String[] path) {
 		return id(first + "/" + String.join("/", path));
+	}
+
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MODID, path);
 	}
 
 	public static Identifier id(String... path) {

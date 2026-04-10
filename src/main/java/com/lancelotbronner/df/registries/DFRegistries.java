@@ -2,7 +2,7 @@ package com.lancelotbronner.df.registries;
 
 import com.lancelotbronner.df.DwarfFortress;
 import com.lancelotbronner.df.data.GemCut;
-import com.lancelotbronner.df.data.Material;
+import com.lancelotbronner.df.materials.Material;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.RegistryBuilder;
